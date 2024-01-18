@@ -1,0 +1,11 @@
+table td {
+   border: 1px solid black;
+   width: 80px;
+   height: 80px;
+}
+.grid {
+   background-color: aqua;   
+}
+.grid-displey-none {
+   display: none;
+}
