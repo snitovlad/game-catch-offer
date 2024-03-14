@@ -3,6 +3,12 @@ export const OFFER_STATUSES = {
    caught: 'caught',
    miss: 'miss'
 }
+export const GAME_STATUSES = {
+   setting: 'setting',
+   in_process: 'in_process',
+   you_win: 'you_win',
+   you_lose: 'you_lose'
+}
 
 export const data = {
    settings: {
@@ -25,11 +31,10 @@ export const data = {
    maximumMissesSettings: [3, 5, 7, 9, 11, 13],
    decreaseMsAfterTheCatch: [10, 30, 50, 70, 100, 120, 140],
    stepTimeoutInMs: 2000,
-   isWinner: null,
+   gameStatus: GAME_STATUSES.setting,
    status: OFFER_STATUSES.default,
    coords: {
       current: {
-         //наверно можно убрать начальные координаты
          x: 0,
          y: 0
       },
@@ -47,11 +52,18 @@ export const data = {
 let subscribers = [];
 
 export function subscribe(newSubscriber) {
-   subscribers.push(newSubscriber);
-}
+      subscribers.push(newSubscriber);
+      console.log(subscribers)
+   }
 //запускаем по очереди функции-подписчики
 function notify() {
    subscribers.forEach(subscriber => subscriber())
+}
+
+//subscriber для перерисовки всего
+let globalSubscriber = null;
+export function globalSubscribe(newGlobalSubscriber) {
+   globalSubscriber = newGlobalSubscriber
 }
 
 let stepIntervalId;
@@ -72,13 +84,9 @@ export function moveOfferToRandomPosition() {
       newY = getRandom(data.settings.rowsCount - 1);
    } while (data.coords.current.x === newX && data.coords.current.y === newY)
 
-   //missOffer();
-
    //присваиваются новые координаты для offer
    data.coords.current.x = newX;
    data.coords.current.y = newY;
-
-   //subscriber(); забрали в setInterval
 }
 
 //создали функцию для промаха
@@ -103,9 +111,8 @@ export function catchOffer() {
    //присвоили предыдущие координаты для попадания
    data.coords.previous = { ...data.coords.current }
 
-      data.stepTimeoutInMs -= data.settings.decreaseDeltaInMs;
-      console.log(data.stepTimeoutInMs)
-   
+   data.stepTimeoutInMs -= data.settings.decreaseDeltaInMs;
+
    setTimeout(() => {
       data.status = OFFER_STATUSES.default;
       notify()
@@ -124,70 +131,72 @@ function getRandom(N) {
    return Math.floor(Math.random() * (N + 1))
 }
 
-//функция для смены размера сетки
+//функция для установки размера сетки
 export function getGridSize(index) {
    data.settings.rowsCount = data.gridSettings[index].width;
    data.settings.columnsCount = data.gridSettings[index].height;
    notify(); //перерисовываем в greed.component.js
 }
 
-//функция для смены количества попаданий
+//функция для установки количества попаданий
 export function getPointsToWin(index) {
    data.settings.pointToWin = data.pointToWinSettings[index];
    notify()
 }
-//функция для смены количества пропусков
+//функция для установки количества пропусков
 export function getMaximumMisses(index) {
    data.settings.maximumMisses = data.maximumMissesSettings[index];
    notify()
 }
-//функция для смены уменьшения времени на попадание
+//функция для установки уменьшения времени на попадание
 export function getDecreaseMsAfterTheCatch(index) {
    data.settings.decreaseDeltaInMs = data.decreaseMsAfterTheCatch[index];
    notify()
 }
-//функция для звука
-export function getMuteMode(isChecked) {
-   if (isChecked) {
-      data.settings.isMuted = true;
-      //alert('hvjhvj')      
-   } else {data.settings.isMuted = false}
 
-   notify()
+export function gameStatusInProcess() {
+   data.gameStatus = GAME_STATUSES.in_process
+   runStepInterval()
+   globalSubscriber()
+}
+export function gameStatusSetting() {
+   data.gameStatus = GAME_STATUSES.setting
+   clearInterval(stepIntervalId)
+   globalSubscriber()
+}
+let stopTime = 0
+export function gameStatusYouWin() {
+   data.gameStatus = GAME_STATUSES.you_win
+   stopTime = new Date;
+   subscribers = [];
+   clearInterval(stepIntervalId)
+   globalSubscriber()
+}
+export function gameStatusYouLose() {
+   data.gameStatus = GAME_STATUSES.you_lose
+   stopTime = new Date;
+   subscribers = [];
+   clearInterval(stepIntervalId)
+   globalSubscriber()
 }
 
-
-
-//функция для победителя
-export function youAreWinLose(containerElement) {
-   const gridElement = document.querySelector('.grid')
-   if (data.isWinner === true) {
-      clearInterval(stepIntervalId)
-      gridElement.classList.add('grid-displey-none');
-      const winnerText = document.createElement('h2');
-      winnerText.innerText = 'Ура!! Ты победил!!'
-      containerElement.append(winnerText)
-   }
-   if (data.isWinner === false) {
-      clearInterval(stepIntervalId)
-      gridElement.classList.add('grid-displey-none');
-      const winnerText = document.createElement('h2');
-      winnerText.innerText = 'Ой! Кажется ты проиграл!!'
-      containerElement.append(winnerText)
-   }
-
-}
-
+let startTime = 0;
 //функция для кнопки
 export function buttonStartStop() {
    clearInterval(stepIntervalId)
    moveOfferToRandomPosition();
+   startTime = new Date;
    data.score.missCount = 0;
    data.score.caughtCount = 0;
-   data.isWinner = null
+   data.gameStatus = GAME_STATUSES.in_process
    data.stepTimeoutInMs = 2000;
-   const gridElement = document.querySelector('.grid')
-   gridElement.classList.remove('grid-displey-none');
    runStepInterval()
-   notify()
+   globalSubscriber()
+}
+
+export function resultTime() {
+   let result = Math.round((stopTime - startTime) / 1000);
+   let min = Math.floor((result / 60));
+   let sec = (result - min)
+   return min + 'm ' + sec + 's'
 }

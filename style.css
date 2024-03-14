@@ -1,11 +1,124 @@
+* {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+}
 table td {
-   border: 1px solid black;
+   border: 2px solid #54bae0;
+   border-radius: 5px;
    width: 80px;
    height: 80px;
+   background: #4580c4;
 }
-.grid {
-   background-color: aqua;   
+table {
+   margin: 0 auto;
+   border-spacing: 10px;
 }
-.grid-displey-none {
-   display: none;
+
+body {
+   padding-top: 30px;
+   font-family: "Roboto", sans-serif;
+   height: 100vh;
+   background: radial-gradient(269.02% 186.27% at 96.21% 166.59%, rgb(76, 161, 210) 0%, rgb(40, 91, 174) 100%);
+}
+.you_lose,
+.you_win {
+   width: 300px;
+   height: 498px;
+   margin: 100px auto;
+   padding-top: 280px;
+}
+.you_lose {
+   background: no-repeat url("assets/images/youLose.png");
+}
+
+.you_win {
+   background: no-repeat url("assets/images/youWin.png");
+}
+.score_list {
+   width: 200px;
+   margin: 0 auto;
+}
+.score_list p {
+   font-weight: 400;
+   font-size: 18px;
+   line-height: 133%;
+   color: #3676bc;
+}
+
+.button_start {
+   display: flex;
+   justify-content: center;
+   margin: 0 auto;
+   margin-top: 20px;
+   border-radius: 30px;
+   padding: 10px 36px;   
+   box-shadow:
+      0 4px 6px 0 rgba(0, 0, 0, 0.1),
+      0 2px 4px 0 rgba(0, 0, 0, 0.06);
+   background: #b0c255;
+   font-weight: 500;
+   font-size: 24px;
+   line-height: 1;
+   color: #fff;
+}
+.button_in_setting { 
+   margin-top: 330px;
+}
+.button_set .button_start{
+   padding: 10px 47px;
+}
+.setting {
+   display: flex;
+   justify-content: space-between;
+   margin: 0px 65px 30px 65px;
+   width: 1200px;
+   margin: 0 auto 30px;
+
+}
+
+.grid_size,
+.decrease_after_catch,
+.maximum_misses,
+.points_to_win {
+   border: 1px solid #4fabff;
+   border-radius: 30px;
+   padding: 6px 12px;
+   width: 237px;
+   height: 36px;
+   background-color: transparent;
+   font-weight: 400;
+   font-size: 16px;
+   line-height: 1.5;
+   color: #fff;
+}
+.mute_mode_image {
+   height: 36px;
+}
+.title_maximum_misses,
+.title_decrease_after_catch,
+.title_grid_size,
+.title_points_to_win,
+.title_mute_mode {
+   font-weight: 400;
+   font-size: 14px;
+   line-height: 1.71429;
+   color: #fff;
+}
+
+.score_table {
+   display: flex;
+   justify-content: space-between;
+   margin: 0 auto;
+   border-radius: 30px;
+   padding: 12px 36px;
+   width: 375px;
+   height: 48px;
+   box-shadow: 0 4px 8px 0 rgba(88, 150, 238, 0.3);
+   background: #528cde;
+   font-weight: 400;
+   font-size: 18px;
+   line-height: 1.33333;
+   color: #fff;
+   margin-bottom: 30px;
 }

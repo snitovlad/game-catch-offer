@@ -1,27 +1,31 @@
-import { data, subscribe, youAreWinLose } from '../../../data/game.data.js'
+import { data, gameStatusYouLose, gameStatusYouWin, subscribe } from '../../../data/game.data.js'
 
 export function Scores() {
+   const containerElement = document.createElement('div');
+   containerElement.classList = 'score_table'
+
+   const scoreCaughtElement = document.createElement('span');
+   const missCaughtElement = document.createElement('span');
+
+   update(scoreCaughtElement, missCaughtElement);
 
    subscribe(() => {
-      containerElement.innerHTML = '';
-      youAreWinLose(containerElement)
-      update(containerElement);
-      
+      scoreCaughtElement.innerHTML = '';
+      missCaughtElement.innerHTML = '';
+      update(scoreCaughtElement, missCaughtElement);
    })
-
-   
-   const containerElement = document.createElement('div');
-   update(containerElement);
+   containerElement.append(scoreCaughtElement, missCaughtElement)
    return containerElement;
 }
 
-function update(containerElement) {
-   containerElement.append('catch: ' + data.score.caughtCount + '; miss: ' + data.score.missCount);
-   if (data.score.caughtCount === data.settings.pointToWin) {      
-      data.isWinner = true;     
+function update(scoreCaughtElement, missCaughtElement) {
+   scoreCaughtElement.append('Catch: ' + data.score.caughtCount)
+   missCaughtElement.append('Miss: ' + data.score.missCount)
+   if (data.score.caughtCount === data.settings.pointToWin) {
+      gameStatusYouWin()
    }
-   if (data.score.missCount === data.settings.maximumMisses) {      
-      data.isWinner = false;     
+   if (data.score.missCount === data.settings.maximumMisses) {
+      gameStatusYouLose()
    }
 
 }

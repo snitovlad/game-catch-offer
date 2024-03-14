@@ -7,6 +7,7 @@ import { SetMuteMode } from "./setGameSettings.component/setMuteMode.js";
 
 export function Settings() {
    const containerElement = document.createElement('div');
+   containerElement.classList = 'setting'
 
    const setGridSize = SetGridSize();
    containerElement.append(setGridSize)

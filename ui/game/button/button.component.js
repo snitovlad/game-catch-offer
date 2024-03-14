@@ -1,11 +1,12 @@
-import { buttonStartStop } from "../../../data/game.data.js"
-
-export function Button() {   
+export function Button(title, func) {   
    const containerElement = document.createElement('div')
+   
    const buttonElement = document.createElement('button')
-   buttonElement.innerText= 'Start'
+   buttonElement.classList = 'button_start'
+   buttonElement.innerText= title
+  
    buttonElement.addEventListener('click', () => {
-      buttonStartStop()
+      func()
    })
    containerElement.append(buttonElement)
    return containerElement

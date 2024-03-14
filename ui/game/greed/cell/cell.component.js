@@ -1,17 +1,23 @@
-import { catchOffer, data,  OFFER_STATUSES, subscribe} from "../../../../data/game.data.js";
+import { catchOffer, data, OFFER_STATUSES, subscribe } from "../../../../data/game.data.js";
+
 
 export function Cell(x, y) {
-   subscribe(() => {
-      update(x, y, cellEl)
-   })
+
+   //если subscribe здесь - то каждый интервал будет обновляться содержимое ячейки,
+   //но также будет добавляться много функций в массив subscriber
+   //если subscribe в grid.component - то будет пересоздаваться вся таблица, 
+   
+   // subscribe(() => {
+   //    update(x, y, cellEl)
+   // })
+
    const cellEl = document.createElement('td');
    update(x, y, cellEl);
-   //cellEl.append(x + '-' + y);
    return cellEl;
 }
 
 function update(x, y, cellEl) {
-   cellEl.innerHTML = '';
+   //cellEl.innerHTML = ''; //очищать наверно не надо, т.к. каждый раз создаем заново
    if (x === data.coords.current.x && y === data.coords.current.y) {
       const offerEl = document.createElement('img');
       offerEl.addEventListener('click', catchOffer)

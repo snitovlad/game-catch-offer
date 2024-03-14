@@ -4,12 +4,13 @@ import { Cell } from './cell/cell.component.js'
 export function Greed() {
    moveOfferToRandomPosition(); //запустили случайную отрисовку начальных координат
 
-subscribe(() => updateGrid(data.settings.rowsCount, data.settings.columnsCount, containerElement))
-
+   //если subscribe здесь - то каждый интервал будет пересоздаваться вся таблица
+   //если subscribe в cell.component - то будет обновляться содержимое ячеки, 
+   //но также будет добавляться много функций в массив subscribers
+   subscribe(() => updateGrid(data.settings.rowsCount, data.settings.columnsCount, containerElement))
+   
    const containerElement = document.createElement('table');
-   containerElement.classList = 'grid';
    updateGrid(data.settings.rowsCount, data.settings.columnsCount, containerElement)
-
    return containerElement;
 }
 
@@ -22,5 +23,5 @@ function updateGrid(rows, columns, containerElement) {
          row.append(cell)
          containerElement.append(row)
       }
-   }  
+   }
 }

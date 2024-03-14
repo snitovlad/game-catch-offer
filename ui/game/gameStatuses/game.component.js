@@ -1,11 +1,14 @@
-import {Settings} from './settings/settings.component.js'
-import {Scores} from './scores/scores.component.js'
-import {Greed} from './greed/grid.component.js'
-import {Button} from './button/button.component.js'
+import { Settings } from '../settings/settings.component.js'
+import { Scores } from '../scores/scores.component.js'
+import { Greed } from '../greed/grid.component.js'
+import { CatchSound, MissSound } from '../../../sound/player.js';
 
 export function Game() {
+   CatchSound();
+   MissSound();
+
    const containerElement = document.createElement('div');
-   
+
    const settingsElement = Settings();
    containerElement.append(settingsElement);
 
@@ -15,8 +18,5 @@ export function Game() {
    const greedElement = Greed();
    containerElement.append(greedElement);
 
-   const button = Button();
-   containerElement.append(button);
-   
    return containerElement;
 }
